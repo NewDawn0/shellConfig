@@ -1,0 +1,144 @@
+{
+  "nodes": {
+    "ds": {
+      "inputs": {
+        "utils": [
+          "utils"
+        ]
+      },
+      "locked": {
+        "lastModified": 1743862333,
+        "narHash": "sha256-RUzcQFR22+gnuPfDtrenJ+Hc1+4tullJ2Y2V8mY4Qf4=",
+        "owner": "NewDawn0",
+        "repo": "dirStack",
+        "rev": "a90a82d21716839f13bf32eb5ade065f9693d6b9",
+        "type": "github"
+      },
+      "original": {
+        "owner": "NewDawn0",
+        "repo": "dirStack",
+        "type": "github"
+      }
+    },
+    "nix-systems": {
+      "locked": {
+        "lastModified": 1681028828,
+        "narHash": "sha256-Vy1rq5AaRuLzOxct8nz4T6wlgyUR7zLU309k9mBC768=",
+        "owner": "nix-systems",
+        "repo": "default",
+        "rev": "da67096a3b9bf56a91d16901293e51ba5b49a27e",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nix-systems",
+        "repo": "default",
+        "type": "github"
+      }
+    },
+    "nixpkgs": {
+      "locked": {
+        "lastModified": 1743851869,
+        "narHash": "sha256-v4CJiNuMoTOorG8h3A5xmBh7WVIeT6UTgiNJIIl512E=",
+        "owner": "nixos",
+        "repo": "nixpkgs",
+        "rev": "4e5bc90b70299b3be5b8090d694cfcd279a22dca",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nixos",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
+    "pac": {
+      "inputs": {
+        "utils": [
+          "utils"
+        ]
+      },
+      "locked": {
+        "lastModified": 1743863569,
+        "narHash": "sha256-9NglwT86cWX/xvOG6G1JJiw0JPaMIcUvPjM2hkuAtbU=",
+        "owner": "NewDawn0",
+        "repo": "pac",
+        "rev": "60a34231987aa27570b7035563b715a4f90f1ac6",
+        "type": "github"
+      },
+      "original": {
+        "owner": "NewDawn0",
+        "repo": "pac",
+        "type": "github"
+      }
+    },
+    "root": {
+      "inputs": {
+        "ds": "ds",
+        "pac": "pac",
+        "tmux-cfg": "tmux-cfg",
+        "up": "up",
+        "utils": "utils"
+      }
+    },
+    "tmux-cfg": {
+      "inputs": {
+        "utils": [
+          "utils"
+        ]
+      },
+      "locked": {
+        "lastModified": 1743862666,
+        "narHash": "sha256-yZzDMTibdEdntPzmHvzXHYTfTLAjRnKh2/2k0bbkOeM=",
+        "owner": "NewDawn0",
+        "repo": "tmuxConfig",
+        "rev": "6c1c8417196b1479b695999ed0bd751a26e11bde",
+        "type": "github"
+      },
+      "original": {
+        "owner": "NewDawn0",
+        "repo": "tmuxConfig",
+        "type": "github"
+      }
+    },
+    "up": {
+      "inputs": {
+        "utils": [
+          "utils"
+        ]
+      },
+      "locked": {
+        "lastModified": 1743863601,
+        "narHash": "sha256-Ckl3p2Uj9xsLWD9cu+YRiATWu++MN/LzTg4egTT5CZM=",
+        "owner": "NewDawn0",
+        "repo": "up",
+        "rev": "ce5b28ac3729f49195f5a6a50d679c37259b82ec",
+        "type": "github"
+      },
+      "original": {
+        "owner": "NewDawn0",
+        "repo": "up",
+        "type": "github"
+      }
+    },
+    "utils": {
+      "inputs": {
+        "nix-systems": "nix-systems",
+        "nixpkgs": "nixpkgs"
+      },
+      "locked": {
+        "lastModified": 1743862127,
+        "narHash": "sha256-xAE3kOlNako3d1tB+ppnP2FCkct+hCbgOyMVKYrrzmY=",
+        "owner": "NewDawn0",
+        "repo": "nixUtils",
+        "rev": "fd96a7ae8aaa84bb69928c5606975a1b7d222016",
+        "type": "github"
+      },
+      "original": {
+        "owner": "NewDawn0",
+        "repo": "nixUtils",
+        "type": "github"
+      }
+    }
+  },
+  "root": "root",
+  "version": 7
+}
