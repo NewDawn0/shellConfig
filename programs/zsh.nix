@@ -4,15 +4,6 @@ let
     starship = import ./starship.nix { inherit pkgs; };
     fastfetch = import ./fastfetch.nix { inherit pkgs; };
   };
-  jq = {
-    null = "1;30";
-    false = "0;37";
-    true = "0;37";
-    numbers = "0;37";
-    strings = "0;32";
-    arrays = "1;37";
-    objects = "1;37";
-  };
   dots = pkgs.stdenvNoCC.mkDerivation {
     name = "dots";
     src = null;
@@ -56,7 +47,6 @@ let
       EDITOR="nvim"
       VISUAL="nvim"
       PAGER="less"
-      JQ_COLORS="${jq.null}:${jq.false}:${jq.true}:${jq.numbers}:${jq.strings}:${jq.arrays}:${jq.objects}";
       # Aliases
       alias fetch="${cfg.fastfetch}/bin/fastfetch"
       alias neofetch="${cfg.fastfetch}/bin/fastfetch"
