@@ -63,6 +63,6 @@ let
 in pkgs.symlinkJoin {
   name = "git";
   paths = with pkgs;
-    [ gitPkg ] ++ lib.optional stdenv.hostPlatform.isDarwin [ pinentry_mac ]
-    ++ lib.optional stdenv.hostPlatform.isLinux [ pinentry-qt ];
+    [ gitPkg ] ++ lib.optional stdenv.isDarwin [ pinentry_mac ]
+    ++ lib.optional stdenv.isLinux [ pinentry-qt ];
 }
