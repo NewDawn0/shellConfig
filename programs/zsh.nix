@@ -61,6 +61,7 @@ let
       alias nixgc="nix-store --gc && nix-store --optimize";
       alias regit="mv tmp/.git . && rmdir tmp";
       alias ungit="mkdir -p tmp && mv .git tmp/";
+      alias clean='fd -t l -H "^result$" | xargs -I{} rm {} && fd -t d -H '^target$' -E '.cargo' -E 'Library' | xargs -I{} "cd {} && cargo clean"'
     '';
     installPhase = ''
       mkdir -p $out/share/dots
