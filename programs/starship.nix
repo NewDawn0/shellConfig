@@ -5,9 +5,9 @@ let
       fg0 = "#181818";
       p0 = "#ff767a";
       p1 = "#ff9268";
-      p2 = "#86BBD8";
-      p3 = "#55bcf7";
-      p4 = "#aeabdf";
+      p2 = "#ffd254";
+      p3 = "#86BBD8";
+      p4 = "#45ace7";
       p5 = "#da84e4";
       green = "#80dc7e";
       purple = "#da84e4";
@@ -31,8 +31,8 @@ let
       p1 = "#d79921";
       p2 = "#689d6a";
       p3 = "#458588";
-      p5 = "#3c3836";
-      p4 = "#665c54";
+      p4 = "#3c3836";
+      p5 = "#665c54";
       green = "#76D274";
       purple = "#b16286";
       red = "#FF7078";
@@ -41,7 +41,7 @@ let
   cfg = c: {
     "$schema" = "https://starship.rs/config-schema.json";
     format = ''
-      [](${c.p0})$os$username[](bg:${c.p1} fg:${c.p0})$directory[](fg:${c.p1} bg:${c.p2})$git_branch$git_status[](fg:${c.p2} bg:${c.p3})$c$rust$golang$nodejs$php$java$kotlin$haskell$python[](fg:${c.p3} bg:${c.p4})$docker_context$conda[](fg:${c.p4} bg:${c.p5})$time[ ](fg:${c.p5})
+      [](${c.p0})$os$username[](bg:${c.p1} fg:${c.p0})$directory[](fg:${c.p1} bg:${c.p2})$git_branch$git_status$nix_shell$docker_context$conda[](fg:${c.p2} bg:${c.p3})$c$rust$golang$nodejs$php$java$kotlin$haskell$python[](fg:${c.p3} bg:${c.p4})[](fg:${c.p4} bg:${c.p5})$time[ ](fg:${c.p5})
       $line_break$character
     '';
     # General
@@ -117,6 +117,21 @@ let
       format =
         "[[($all_status$ahead_behind )](fg:${c.fg0} bg:${c.p2})]($style)";
     };
+    nix_shell = {
+      symbol = "󱄅";
+      style = "bg:${c.p2}";
+      format = "[[ $sybol $name](fg:${c.fg0} bg:${c.p2})]($style)";
+      heuristic = true;
+    };
+    docker_context = {
+      symbol = "";
+      style = "bg:${c.p2}";
+      format = "[[ $symbol( $context) ](fg: ${c.fg0} bg:${c.p2})]($style)";
+    };
+    conda = {
+      style = "bg:${c.p2}";
+      format = "[[ $symbol( $environment) ](fg: ${c.fg0} bg:${c.p2})]($style)";
+    };
     nodejs = {
       symbol = "";
       style = "bg:${c.p3}";
@@ -161,15 +176,6 @@ let
       symbol = "";
       style = "bg:${c.p3}";
       format = "[[ $symbol( $version) ](fg:${c.fg0} bg:${c.p3})]($style)";
-    };
-    docker_context = {
-      symbol = "";
-      style = "bg:${c.p5}";
-      format = "[[ $symbol( $context) ](fg:#83a598 bg:${c.p5})]($style)";
-    };
-    conda = {
-      style = "bg:${c.p5}";
-      format = "[[ $symbol( $environment) ](fg:#83a598 bg:${c.p5})]($style)";
     };
   };
   starshipCfg =
