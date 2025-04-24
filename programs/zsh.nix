@@ -75,8 +75,12 @@ let
     export ZDOTDIR=${dots}/share/dots
     exec ${pkgs.zsh}/bin/zsh -i
   '';
+  deps = pkgs.symlinkJoin {
+    name = "deps";
+    paths = with pkgs; [ up ];
+  };
 in pkgs.symlinkJoin {
   name = "ndzsh";
   pname = "zsh";
-  paths = [ dots bin ];
+  paths = [ bin deps dots ];
 }
