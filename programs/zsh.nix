@@ -69,7 +69,6 @@ let
       install -D $zshrc  $out/share/dots/.zshrc
       cat $zshenv > $out/share/SOURCE_ME.sh
       cat $zshrc >> $out/share/SOURCE_ME.sh
-      cat ${pkgs.up}/share/SOURCE_ME.sh >> $out/share/SOURCE_ME.sh
     '';
   };
   bin = pkgs.writeShellScriptBin "zsh" ''
@@ -78,7 +77,20 @@ let
   '';
   deps = pkgs.symlinkJoin {
     name = "deps";
-    paths = with pkgs; [ up ];
+    paths = with pkgs; [
+      # Shell
+      direnv
+      fzf
+      jq
+      lsd
+      pac-asm
+      up
+      zoxide
+      zsh-autosuggestions
+      # Custom
+      cfg.fastfetch
+      cfg.starship
+    ];
   };
 in pkgs.symlinkJoin {
   name = "ndzsh";

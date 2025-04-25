@@ -33,16 +33,5 @@ in pkgs.symlinkJoin {
     imagemagick
     license-cli
     onefetch
-    # Shell
-    direnv
-    fzf
-    jq
-    lsd
-    pac-asm
-    zoxide
-    zsh-autosuggestions
-    # Custom
-    cfg.fastfetch
-    cfg.starship
   ];
 }
