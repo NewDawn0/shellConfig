@@ -69,6 +69,7 @@ let
       install -D $zshrc  $out/share/dots/.zshrc
       cat $zshenv > $out/share/SOURCE_ME.sh
       cat $zshrc >> $out/share/SOURCE_ME.sh
+      cat ${pkgs.up}/share/SOURCE_ME.sh >> $out/share/SOURCE_ME.sh
     '';
   };
   bin = pkgs.writeShellScriptBin "zsh" ''
@@ -82,5 +83,5 @@ let
 in pkgs.symlinkJoin {
   name = "ndzsh";
   pname = "zsh";
-  paths = [ bin deps dots ];
+  paths = [ bin dots deps ];
 }
