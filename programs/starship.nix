@@ -120,7 +120,7 @@ let
     nix_shell = {
       symbol = "󱄅";
       style = "bg:${c.p2}";
-      format = "[[ $sybol $name](fg:${c.fg0} bg:${c.p2})]($style)";
+      format = "[[ $sybol $name ](fg:${c.fg0} bg:${c.p2})]($style)";
       heuristic = true;
     };
     docker_context = {
