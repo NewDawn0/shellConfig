@@ -118,9 +118,9 @@ let
         "[[($all_status$ahead_behind )](fg:${c.fg0} bg:${c.p2})]($style)";
     };
     nix_shell = {
-      symbol = "󱄅";
+      symbol = "!󱄅!";
       style = "bg:${c.p2}";
-      format = "[[ $sybol $name ](fg:${c.fg0} bg:${c.p2})]($style)";
+      format = "[[ $symbol( $name) ](fg:${c.fg0} bg:${c.p2})]($style)";
       heuristic = true;
     };
     docker_context = {
