@@ -41,7 +41,7 @@ let
   cfg = c: {
     "$schema" = "https://starship.rs/config-schema.json";
     format = ''
-      [](${c.p0})$os$username[](bg:${c.p1} fg:${c.p0})$directory[](fg:${c.p1} bg:${c.p2})$git_branch$git_status$nix_shell$docker_context$conda[](fg:${c.p2} bg:${c.p3})$c$rust$golang$nodejs$php$java$kotlin$haskell$python[](fg:${c.p3} bg:${c.p4})[](fg:${c.p4} bg:${c.p5})$time[ ](fg:${c.p5})
+      [](${c.p0})$os$username[](bg:${c.p1} fg:${c.p0})$directory[](fg:${c.p1} bg:${c.p2})$git_branch$git_status[](fg:${c.p2} bg:${c.p3})$nix_shell$docker_context$conda[](fg:${c.p3} bg:${c.p4})$c$rust$golang$nodejs$php$java$kotlin$haskell$python[](fg:${c.p4} bg:${c.p5})$time[ ](fg:${c.p5})
       $line_break$character
     '';
     # General
@@ -118,64 +118,64 @@ let
         "[[($all_status$ahead_behind )](fg:${c.fg0} bg:${c.p2})]($style)";
     };
     nix_shell = {
-      symbol = "!󱄅!";
-      style = "bg:${c.p2}";
-      format = "[[ $symbol( $name) ](fg:${c.fg0} bg:${c.p2})]($style)";
+      symbol = "󱄅";
+      style = "bg:${c.p3}";
+      format = "[[ $symbol( $name) ](fg:${c.fg0} bg:${c.p3})]($style)";
       heuristic = true;
     };
     docker_context = {
       symbol = "";
-      style = "bg:${c.p2}";
-      format = "[[ $symbol( $context) ](fg: ${c.fg0} bg:${c.p2})]($style)";
+      style = "bg:${c.p3}";
+      format = "[[ $symbol( $context) ](fg:${c.fg0} bg:${c.p3})]($style)";
     };
     conda = {
-      style = "bg:${c.p2}";
-      format = "[[ $symbol( $environment) ](fg: ${c.fg0} bg:${c.p2})]($style)";
+      style = "bg:${c.p3}";
+      format = "[[ $symbol( $environment) ](fg:${c.fg0} bg:${c.p3})]($style)";
     };
     nodejs = {
       symbol = "";
-      style = "bg:${c.p3}";
-      format = "[[ $symbol( $version) ](fg:${c.fg0} bg:${c.p3})]($style)";
+      style = "bg:${c.p4}";
+      format = "[[ $symbol( $version) ](fg:${c.fg0} bg:${c.p4})]($style)";
     };
     c = {
       symbol = " ";
-      style = "bg:${c.p3}";
-      format = "[[ $symbol( $version) ](fg:${c.fg0} bg:${c.p3})]($style)";
+      style = "bg:${c.p4}";
+      format = "[[ $symbol( $version) ](fg:${c.fg0} bg:${c.p4})]($style)";
     };
     rust = {
       symbol = "";
-      style = "bg:${c.p3}";
-      format = "[[ $symbol( $version) ](fg:${c.fg0} bg:${c.p3})]($style)";
+      style = "bg:${c.p4}";
+      format = "[[ $symbol( $version) ](fg:${c.fg0} bg:${c.p4})]($style)";
     };
     golang = {
       symbol = "";
-      style = "bg:${c.p3}";
-      format = "[[ $symbol( $version) ](fg:${c.fg0} bg:${c.p3})]($style)";
+      style = "bg:${c.p4}";
+      format = "[[ $symbol( $version) ](fg:${c.fg0} bg:${c.p4})]($style)";
     };
     php = {
       symbol = "";
-      style = "bg:${c.p3}";
-      format = "[[ $symbol( $version) ](fg:${c.fg0} bg:${c.p3})]($style)";
+      style = "bg:${c.p4}";
+      format = "[[ $symbol( $version) ](fg:${c.fg0} bg:${c.p4})]($style)";
     };
     java = {
       symbol = "";
-      style = "bg:${c.p3}";
-      format = "[[ $symbol( $version) ](fg:${c.fg0} bg:${c.p3})]($style)";
+      style = "bg:${c.p4}";
+      format = "[[ $symbol( $version) ](fg:${c.fg0} bg:${c.p4})]($style)";
     };
     kotlin = {
       symbol = "";
-      style = "bg:${c.p3}";
-      format = "[[ $symbol( $version) ](fg:${c.fg0} bg:${c.p3})]($style)";
+      style = "bg:${c.p4}";
+      format = "[[ $symbol( $version) ](fg:${c.fg0} bg:${c.p4})]($style)";
     };
     haskell = {
       symbol = "";
-      style = "bg:${c.p3}";
-      format = "[[ $symbol( $version) ](fg:${c.fg0} bg:${c.p3})]($style)";
+      style = "bg:${c.p4}";
+      format = "[[ $symbol( $version) ](fg:${c.fg0} bg:${c.p4})]($style)";
     };
     python = {
       symbol = "";
-      style = "bg:${c.p3}";
-      format = "[[ $symbol( $version) ](fg:${c.fg0} bg:${c.p3})]($style)";
+      style = "bg:${c.p4}";
+      format = "[[ $symbol( $version) ](fg:${c.fg0} bg:${c.p4})]($style)";
     };
   };
   starshipCfg =
