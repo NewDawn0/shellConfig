@@ -3,7 +3,7 @@ let
   cfg = {
     starship = import ./starship.nix { inherit pkgs; };
     fastfetch = import ./fastfetch.nix { inherit pkgs; };
-    git = import ./git.nix { inherit pkgs; };
+    git = import ./git-pkg.nix { inherit pkgs; };
   };
   dots = pkgs.stdenvNoCC.mkDerivation {
     name = "dots";
