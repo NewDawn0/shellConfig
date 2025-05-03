@@ -1,10 +1,5 @@
 { pkgs }:
-let
-  cfg = {
-    starship = import ./starship.nix { inherit pkgs; };
-    fastfetch = import ./fastfetch.nix { inherit pkgs; };
-  };
-in pkgs.symlinkJoin {
+pkgs.symlinkJoin {
   name = "shell-env-pkgs";
   paths = with pkgs; [
     # Default
@@ -34,5 +29,6 @@ in pkgs.symlinkJoin {
     kill-name
     license-cli
     onefetch
+    speedtest-go
   ];
 }
