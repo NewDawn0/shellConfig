@@ -20,6 +20,26 @@
         "type": "github"
       }
     },
+    "kill-name": {
+      "inputs": {
+        "utils": [
+          "utils"
+        ]
+      },
+      "locked": {
+        "lastModified": 1746270651,
+        "narHash": "sha256-CtUuTviU0kg31rccuAGWEWsz5IVo3TOH/e+uRfdcNd8=",
+        "owner": "NewDawn0",
+        "repo": "killName",
+        "rev": "b32237e963532e4c1ebdae02516204ed0099d713",
+        "type": "github"
+      },
+      "original": {
+        "owner": "NewDawn0",
+        "repo": "killName",
+        "type": "github"
+      }
+    },
     "nix-systems": {
       "locked": {
         "lastModified": 1681028828,
@@ -73,6 +93,7 @@
     "root": {
       "inputs": {
         "ds": "ds",
+        "kill-name": "kill-name",
         "pac": "pac",
         "tmux-cfg": "tmux-cfg",
         "up": "up",
