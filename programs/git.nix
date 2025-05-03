@@ -56,13 +56,22 @@ let
       user = default.user;
     };
   };
-  configFile = (pkgs.formats.toml { }).generate "config.toml" default.config;
+  config = pkgs.stdenvNoCC.mkDerivation {
+    name = "git-configs";
+    src = null;
+    dontUnpack = true;
+    dontBuild = true;
+    configFile = (pkgs.formats.toml { }).generate "config.toml" default.config;
+    installPhase = ''
+      install -Dm644 $configFile $out/share/config.toml
+    '';
+  };
   gitPkg = pkgs.writeShellScriptBin "git" ''
-    GIT_CONFIG_GLOBAL="${configFile}" ${pkgs.git}/bin/git "$@"
+    GIT_CONFIG_GLOBAL="${config}/share/config.toml" ${pkgs.git}/bin/git "$@"
   '';
 in pkgs.symlinkJoin {
   name = "git";
   paths = with pkgs;
-    [ gitPkg ] ++ lib.optional stdenv.isDarwin [ pinentry_mac ]
+    [ config gitPkg ] ++ lib.optional stdenv.isDarwin [ pinentry_mac ]
     ++ lib.optional stdenv.isLinux [ pinentry-qt ];
 }

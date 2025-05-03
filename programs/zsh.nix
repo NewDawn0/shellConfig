@@ -3,6 +3,7 @@ let
   cfg = {
     starship = import ./starship.nix { inherit pkgs; };
     fastfetch = import ./fastfetch.nix { inherit pkgs; };
+    git = import ./git.nix { inherit pkgs; };
   };
   dots = pkgs.stdenvNoCC.mkDerivation {
     name = "dots";
@@ -47,6 +48,7 @@ let
       EDITOR="nvim"
       VISUAL="nvim"
       PAGER="less"
+      GIT_CONFIG_GLOBAL="${cfg.git}/share/config.toml"
       # Aliases
       alias fetch="${cfg.fastfetch}/bin/fastfetch"
       alias neofetch="${cfg.fastfetch}/bin/fastfetch"
