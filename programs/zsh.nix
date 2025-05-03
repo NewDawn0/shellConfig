@@ -60,10 +60,10 @@ let
       alias ls="lsd";
       alias lt="lsd --tree"
       alias mv="mv -i";
-      alias nixgc="nix-store --gc && nix-store --optimize";
+      alias nix-gc="nix-store --gc && nix-store --optimize";
       alias regit="mv tmp/.git . && rmdir tmp";
       alias ungit="mkdir -p tmp && mv .git tmp/";
-      alias nixclean='fd -t l -H "^result$" ~/GitHub | xargs -I{} rm {} && fd -t d -H '^target$' ~/GitHub | xargs -I{} "cd {} && cargo clean"'
+      alias nix-cl='fd -t l -H "^result$" ~/GitHub | xargs -I{} rm {} && fd -t d -H '^target$' ~/GitHub | xargs -I{} "cd {} && cargo clean"'
     '';
     installPhase = ''
       mkdir -p $out/share/dots
