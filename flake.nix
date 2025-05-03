@@ -27,17 +27,13 @@
 
   outputs = { self, utils, ... }@inputs:
     let
-      mkPrograms = pkgs: import ./programs { inherit pkgs; };
-      mkOut = { pkgs, fmt }:
-        pkgs.lib.genAttrs (builtins.attrNames (mkPrograms pkgs)) fmt;
+      getProgs = pkgs: import ./programs { inherit pkgs; };
+      progAttrs = pkgs:
+        let progs = getProgs pkgs;
+        in pkgs.lib.genAttrs (builtins.attrNames progs) (e: progs.${e});
     in {
       overlays.default = final: prev:
-        ((mkOut {
-          pkgs = prev;
-          fmt = e: self.packages.${prev.system}.${e};
-        }) // {
-          ndshell = self.packages.${prev.system}.default;
-        });
+        (progAttrs prev // { ndshell = self.packages.${prev.system}.default; });
       packages = utils.lib.eachSystem {
         overlays = with inputs; [
           ds.overlays.default
@@ -47,14 +43,11 @@
           up.overlays.default
         ];
       } (pkgs:
-        (mkOut {
-          inherit pkgs;
-          fmt = e: (mkPrograms pkgs).${e};
-        }) // {
+        (progAttrs pkgs) // {
           default = pkgs.symlinkJoin {
             name = "ndshell";
-            paths =
-              map (e: (mkPrograms).${e}) (builtins.attrNames (mkPrograms));
+            paths = let progs = getProgs pkgs;
+            in map (e: progs.${e}) (builtins.attrNames progs);
             shellHook = ''
               source $out/share/SOURCE_ME.sh
             '';
