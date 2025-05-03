@@ -25,31 +25,40 @@
     };
   };
 
-  outputs = { self, utils, ... }@inputs: {
-    overlays.default = final: prev: {
-      ndshell = self.packages.${prev.system}.default;
+  outputs = { self, utils, ... }@inputs:
+    let
+      mkPrograms = pkgs: import ./programs { inherit pkgs; };
+      mkOut = { pkgs, fmt }:
+        pkgs.lib.genAttrs (builtins.attrNames (mkPrograms pkgs)) fmt;
+    in {
+      overlays.default = final: prev:
+        ((mkOut {
+          pkgs = prev;
+          fmt = e: self.packages.${prev.system}.${e};
+        }) // {
+          ndshell = self.packages.${prev.system}.default;
+        });
+      packages = utils.lib.eachSystem {
+        overlays = with inputs; [
+          ds.overlays.default
+          kill-name.overlays.default
+          pac.overlays.default
+          tmux-cfg.overlays.default
+          up.overlays.default
+        ];
+      } (pkgs:
+        (mkOut {
+          inherit pkgs;
+          fmt = e: (mkPrograms pkgs).${e};
+        }) // {
+          default = pkgs.symlinkJoin {
+            name = "ndshell";
+            paths =
+              map (e: (mkPrograms).${e}) (builtins.attrNames (mkPrograms));
+            shellHook = ''
+              source $out/share/SOURCE_ME.sh
+            '';
+          };
+        });
     };
-    packages = utils.lib.eachSystem {
-      overlays = with inputs; [
-        ds.overlays.default
-        kill-name.overlays.default
-        pac.overlays.default
-        tmux-cfg.overlays.default
-        up.overlays.default
-      ];
-    } (pkgs:
-      let
-        programs = import ./programs { inherit pkgs; };
-        outPrograms =
-          pkgs.lib.genAttrs (builtins.attrNames programs) (e: programs.${e});
-      in outPrograms // {
-        default = pkgs.symlinkJoin {
-          name = "ndshell";
-          paths = map (e: programs.${e}) (builtins.attrNames programs);
-          shellHook = ''
-            source $out/share/SOURCE_ME.sh
-          '';
-        };
-      });
-  };
 }
