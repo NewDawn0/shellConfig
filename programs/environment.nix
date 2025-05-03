@@ -31,6 +31,7 @@ in pkgs.symlinkJoin {
     docker
     figlet
     imagemagick
+    kill-name
     license-cli
     onefetch
   ];

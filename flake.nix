@@ -7,6 +7,10 @@
       url = "github:NewDawn0/dirStack";
       inputs.utils.follows = "utils";
     };
+    kill-name = {
+      url = "github:NewDawn0/killName";
+      inputs.utils.follows = "utils";
+    };
     pac = {
       url = "github:NewDawn0/pac";
       inputs.utils.follows = "utils";
@@ -28,6 +32,7 @@
     packages = utils.lib.eachSystem {
       overlays = with inputs; [
         ds.overlays.default
+        kill-name.overlays.default
         pac.overlays.default
         tmux-cfg.overlays.default
         up.overlays.default
