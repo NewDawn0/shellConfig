@@ -23,6 +23,7 @@ pkgs.symlinkJoin {
     wget
     # Extra
     colima
+    delta
     docker
     figlet
     imagemagick
