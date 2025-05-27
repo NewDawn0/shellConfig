@@ -1,9 +1,8 @@
 { pkgs }:
 pkgs.symlinkJoin {
-  name = "shell-env-pkgs";
+  name = "extra-env";
   paths = with pkgs; [
     # Default
-    coreutils
     curl
     fd
     ffmpeg
@@ -20,6 +19,7 @@ pkgs.symlinkJoin {
     pkg-config
     qemu
     ripgrep
+    uutils-coreutils
     wget
     # Extra
     colima
@@ -30,6 +30,7 @@ pkgs.symlinkJoin {
     kill-name
     license-cli
     onefetch
+    rusty-man
     speedtest-go
   ];
 }
