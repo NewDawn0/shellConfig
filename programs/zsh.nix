@@ -1,101 +1,129 @@
 { pkgs }:
 let
-  cfg = {
-    starship = import ./starship.nix { inherit pkgs; };
+  # Custom wrapped programs
+  progs = {
+    bat = import ./bat.nix { inherit pkgs; };
     fastfetch = import ./fastfetch.nix { inherit pkgs; };
     git = import ./git-pkg.nix { inherit pkgs; };
+    starship = import ./starship.nix { inherit pkgs; };
   };
-  dots = pkgs.stdenvNoCC.mkDerivation {
-    name = "dots";
-    src = null;
-    dontUnpack = true;
-    zshrc = pkgs.writeShellScript ".zshrc" ''
-      # Inits
-      eval "$(${cfg.starship}/bin/starship init zsh)"
-      eval "$(${pkgs.fzf}/bin/fzf --zsh)"
-      eval "$(${pkgs.zoxide}/bin/zoxide init zsh)"
-      # Startup
-      ${pkgs.pac-asm}/bin/pac
-    '';
-    zshenv = pkgs.writeShellScript ".zshenv" ''
-      # ZSH
-      SHELL=${pkgs.zsh}/bin/zsh
-      HISTSIZE=10000
-      SAVEHIST=10000
-      setopt HIST_EXPIRE_DUPS_FIRST
-      setopt HIST_IGNORE_DUPS
-      setopt HIST_IGNORE_ALL_DUPS
-      setopt HIST_IGNORE_SPACE
-      setopt HIST_FIND_NO_DUPS
-      setopt HIST_SAVE_NO_DUPS
-      zmodload zsh/complist
-      autoload -U compinit; compinit
-      _comp_options+=(globdots)
-      zstyle ':completion:*' menu select
-      # Plugins
-      source ${pkgs.zsh-autopair}/share/zsh/zsh-autopair/autopair.zsh
-      source ${pkgs.zsh-autosuggestions}/share/zsh-autosuggestions/zsh-autosuggestions.zsh
-      source ${pkgs.zsh-fast-syntax-highlighting}/share/zsh/site-functions/fast-syntax-highlighting.plugin.zsh
-      source ${pkgs.zsh-you-should-use}/share/zsh/plugins/you-should-use/you-should-use.plugin.zsh
-      source ${pkgs.up}/share/SOURCE_ME.sh
-      source ${pkgs.dir-stack}/share/SOURCE_ME.sh
-      ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=#aeabdf,bg=none,bold,underline"
-      # Keybinds & inits
-      bindkey '^ ' autosuggest-accept
-      bindkey -v
-      autopair-init
-      # Env vars
-      EDITOR="nvim"
-      VISUAL="nvim"
-      PAGER="less"
-      GIT_CONFIG_GLOBAL="${cfg.git}/share/config.toml"
-      # Aliases
-      alias fetch="${cfg.fastfetch}/bin/fastfetch"
-      alias neofetch="${cfg.fastfetch}/bin/fastfetch"
-      alias cd="z"
-      alias cp="cp -i";
-      alias grep="grep --color=always";
-      alias la="lsd -A"
-      alias ll="lsd -l"
-      alias ls="lsd";
-      alias lt="lsd --tree"
-      alias mv="mv -i";
-      alias nix-gc="nix-store --gc && nix-store --optimize";
-      alias regit="mv tmp/.git . && rmdir tmp";
-      alias ungit="mkdir -p tmp && mv .git tmp/";
-      alias nix-cl='fd -t l -H "^result$" ~/GitHub | xargs -I{} rm {} && fd -t d -H '^target$' ~/GitHub | xargs -I{} "cd {} && cargo clean"'
-    '';
-    installPhase = ''
-      mkdir -p $out/share/dots
-      install -D $zshenv $out/share/dots/.zshenv
-      install -D $zshrc  $out/share/dots/.zshrc
-      cat $zshenv > $out/share/SOURCE_ME.sh
-      cat $zshrc >> $out/share/SOURCE_ME.sh
-    '';
-  };
-  bin = pkgs.writeShellScriptBin "zsh" ''
-    export ZDOTDIR=${dots}/share/dots
-    exec ${pkgs.zsh}/bin/zsh -i
+
+  # Type ✨checked Nix✨
+  mkEnv = env:
+    with builtins;
+    assert isAttrs env;
+    "\n" + concatStringsSep "\n"
+    (map (name: "export ${name}='${toString env.${name}}'") (attrNames env));
+
+  mkAliases = aliases:
+    with builtins;
+    assert isAttrs aliases;
+    "\n" + concatStringsSep "\n"
+    (map (name: "alias ${name}='${toString aliases.${name}}'")
+      (attrNames aliases));
+
+  mkOpts = opts:
+    with builtins;
+    assert isList opts;
+    "\n" + concatStringsSep "\n" (map (opt: "setopt ${opt}") opts);
+
+  mkSource = paths:
+    with builtins;
+    assert isList paths;
+    "\n" + concatStringsSep "\n" (map (p: "source ${p}") paths) + "\n";
+
+  # Environment setup
+  zshEnv = mkEnv {
+    EDITOR = "nvim";
+    GIT_CONFIG_GLOBAL = "${progs.git}/share/config.toml";
+    HISTSIZE = 10000;
+    PAGER = "less";
+    SAVEHIST = 10000;
+    SHELL = "${pkgs.zsh}/bin/zsh";
+    VISUAL = "nvim";
+    ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE = "fg=#aeabdf,bg=none,bold,underline";
+  } + mkAliases {
+    cat = "bat";
+    cd = "z";
+    cp = "cp -i";
+    diff = "delta";
+    grep = "grep --color=always";
+    la = "eza --git --icons -a";
+    ll = "eza --git --icons -l";
+    ls = "eza --git --icons";
+    lt = "eza --git --icons -T";
+    mv = "mv -i";
+    neofetch = "fastfetch";
+    nix-gc = "nix-store --gc && nix-store --optimize";
+    regit = "mv tmp/.git . && rmdir tmp";
+    ungit = "mkdir -p tmp && mv .git tmp/";
+  } + mkOpts [
+    "HIST_EXPIRE_DUPS_FIRST"
+    "HIST_FIND_NO_DUPS"
+    "HIST_IGNORE_ALL_DUPS"
+    "HIST_IGNORE_DUPS"
+    "HIST_IGNORE_SPACE"
+    "HIST_SAVE_NO_DUPS"
+  ] + mkSource [
+    "${pkgs.dir-stack}/share/SOURCE_ME.sh"
+    "${pkgs.up}/share/SOURCE_ME.sh"
+    "${pkgs.zsh-autopair}/share/zsh/zsh-autopair/autopair.zsh"
+    "${pkgs.zsh-autosuggestions}/share/zsh-autosuggestions/zsh-autosuggestions.zsh"
+    "${pkgs.zsh-fast-syntax-highlighting}/share/zsh/site-functions/fast-syntax-highlighting.plugin.zsh"
+    "${pkgs.zsh-you-should-use}/share/zsh/plugins/you-should-use/you-should-use.plugin.zsh"
+  ] + ''
+    zmodload zsh/complist
+    autoload -U compinit; compinit
+    _comp_options+=(globdots)
+    zstyle ':completion:*' menu select
+
+    bindkey '^ ' autosuggest-accept
+    bindkey -v
+    autopair-init
   '';
-  deps = pkgs.symlinkJoin {
-    name = "deps";
-    paths = with pkgs; [
-      # Shell
+  # Runtime config
+  zshRC = ''
+    # Init shell tools
+    eval "$(${pkgs.fzf}/bin/fzf --zsh)"
+    eval "$(${pkgs.zoxide}/bin/zoxide init zsh)"
+    eval "$(${progs.starship}/bin/starship init zsh)"
+
+    # Startup action
+    ${pkgs.pac-asm}/bin/pac
+  '';
+
+  # Unified files in `$out/share/ndzsh` directory
+  ndzsh = pkgs.runCommandNoCC "ndzsh" {
+    source = pkgs.writeShellScript "SOURCE_ME.sh" (zshEnv + "\n" + zshRC);
+    zshenv = pkgs.writeShellScript "zshenv" zshEnv;
+    zshrc = pkgs.writeShellScript "zshrc" zshRC;
+  } ''
+    mkdir -p $out/share/ndzsh
+    install -Dm644 $source $out/share/ndzsh/SOURCE_ME.sh
+    install -Dm644 $zshenv $out/share/ndzsh/.zshenv
+    install -Dm644 $zshrc  $out/share/ndzsh/.zshrc
+  '';
+
+  # Fully wrapped executable
+  zsh = pkgs.writeShellApplication {
+    name = "zsh";
+    runtimeInputs = with pkgs; [
       direnv
+      eza
       fzf
       jq
-      lsd
       pac-asm
       up
       zoxide
-      zsh-autosuggestions
-      # Custom
-      cfg.fastfetch
-      cfg.starship
+      # Custom apps
+      progs.bat
+      progs.fastfetch
+      progs.git
+      progs.starship
     ];
+    text = ''
+      export ZDOTDIR="${ndzsh}/share/ndzsh"
+      exec ${pkgs.zsh}/bin/zsh "$@"
+    '';
   };
-in pkgs.symlinkJoin {
-  name = "ndzsh";
-  pname = "zsh";
-  paths = [ bin dots deps ];
-}
+in zsh
