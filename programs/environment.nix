@@ -19,7 +19,7 @@ pkgs.symlinkJoin {
     pkg-config
     qemu
     ripgrep
-    uutils-coreutils
+    uutils-coreutils-noprefix
     wget
     # Extra
     colima
