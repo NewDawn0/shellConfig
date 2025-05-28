@@ -55,6 +55,8 @@ let
     mv = "mv -i";
     neofetch = "fastfetch";
     nix-gc = "nix-store --gc && nix-store --optimize";
+    nix-cl = ''
+      fd -t l -H "^result$" ~/GitHub | xargs -I{} rm {} && fd -t d -H ^target ~/GitHub | xargs -I{} "cd {} && cargo clean"'';
     regit = "mv tmp/.git . && rmdir tmp";
     ungit = "mkdir -p tmp && mv .git tmp/";
   } + mkOpts [
