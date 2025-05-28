@@ -46,7 +46,7 @@
           fastfetch = self.packages.${prev.system}.fastfetch;
           git-pkg = self.packages.${prev.system}.git-pkg;
           jq-pkg = self.packages.${prev.system}.jq-pkg;
-          # pandoc = self.packages.${prev.system}.pandoc;
+          pandoc = self.packages.${prev.system}.pandoc;
           starship = self.packages.${prev.system}.starship;
           zsh = self.packages.${prev.system}.zsh;
         } // {
@@ -64,10 +64,12 @@
         (progAttrs pkgs) // {
           default = pkgs.symlinkJoin {
             name = "ndshell";
+            pname = "zsh";
             paths = let progs = getProgs pkgs;
             in map (e: progs.${e}) (builtins.attrNames progs);
             shellHook = ''
-              source $out/share/SOURCE_ME.sh
+              export ZDOTDIR="$out/share/ndzsh"
+              exec $out/bin/zsh "$@"
             '';
           };
         });
