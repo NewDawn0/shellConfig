@@ -2,7 +2,11 @@
   description = "Fully fletched shell configuration";
 
   inputs = {
-    utils.url = "github:NewDawn0/nixUtils";
+    nixpkgs.url = "github:nixos/nixpkgs";
+    utils = {
+      url = "github:NewDawn0/nixUtils";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     ds = {
       url = "github:NewDawn0/dirStack";
       inputs.utils.follows = "utils";
@@ -42,7 +46,7 @@
           fastfetch = self.packages.${prev.system}.fastfetch;
           git-pkg = self.packages.${prev.system}.git-pkg;
           jq-pkg = self.packages.${prev.system}.jq-pkg;
-          pandoc = self.packages.${prev.system}.pandoc;
+          # pandoc = self.packages.${prev.system}.pandoc;
           starship = self.packages.${prev.system}.starship;
           zsh = self.packages.${prev.system}.zsh;
         } // {
