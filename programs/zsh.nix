@@ -107,25 +107,30 @@ let
   '';
 
   # Fully wrapped executable
-  zsh = pkgs.writeShellApplication {
-    name = "zsh";
-    runtimeInputs = with pkgs; [
-      direnv
-      eza
-      fzf
-      jq
-      pac-asm
-      up
-      zoxide
-      # Custom apps
-      progs.bat
-      progs.fastfetch
-      progs.git
-      progs.starship
-    ];
-    text = ''
-      export ZDOTDIR="${ndzsh}/share/ndzsh"
-      exec ${pkgs.zsh}/bin/zsh "$@"
-    '';
-  };
-in zsh
+in pkgs.symlinkJoin {
+  name = "zsh";
+  paths = [
+    ndzsh
+    (pkgs.writeShellApplication {
+      name = "zsh";
+      runtimeInputs = with pkgs; [
+        direnv
+        eza
+        fzf
+        jq
+        pac-asm
+        up
+        zoxide
+        # Custom apps
+        progs.bat
+        progs.fastfetch
+        progs.git
+        progs.starship
+      ];
+      text = ''
+        export ZDOTDIR="${ndzsh}/share/ndzsh"
+        exec ${pkgs.zsh}/bin/zsh "$@"
+      '';
+    })
+  ];
+}
