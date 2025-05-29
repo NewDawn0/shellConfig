@@ -46,7 +46,7 @@
           fastfetch = self.packages.${prev.system}.fastfetch;
           git-pkg = self.packages.${prev.system}.git-pkg;
           jq-pkg = self.packages.${prev.system}.jq-pkg;
-          pandoc = self.packages.${prev.system}.pandoc;
+          ndpandoc = self.packages.${prev.system}.ndpandoc;
           starship = self.packages.${prev.system}.starship;
           zsh = self.packages.${prev.system}.zsh;
         } // {

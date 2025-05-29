@@ -7,7 +7,7 @@ let
   };
 in pkgs.lib.makeOverridable ({ config ? defaultConfig }:
   pkgs.symlinkJoin {
-    name = "pandoc";
+    name = "ndpandoc";
     paths = with pkgs; [ pandoc ];
     nativeBuildInputs = with pkgs; [ makeWrapper ];
     text = (pkgs.formats.json { }).generate "pandoc.json" {
@@ -15,8 +15,9 @@ in pkgs.lib.makeOverridable ({ config ? defaultConfig }:
     };
     postBuild = ''
       install -Dm644 $text $out/share/pandoc/pandoc.json
-      wrapProgram $out/bin/pandoc \
+      mv $out/bin/pandoc $out/bin/ndpandoc
+      wrapProgram $out/bin/ndpandoc \
         --add-flags "--defaults $out/share/pandoc/pandoc.json"
+      ln -s $out/bin/ndpandoc $out/bin/pandoc
     '';
-
   }) { config = defaultConfig; }
