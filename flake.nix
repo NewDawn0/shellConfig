@@ -39,16 +39,16 @@
       lib = { inherit progAttrs; };
       overlays.default = final: prev:
         ({
-          ndbat = self.packages.${prev.system}.bat;
-          ndbtm = self.packages.${prev.system}.bottom;
           build-all = self.packages.${prev.system}.build-all;
-          ndenv = self.packages.${prev.system}.environment;
-          ndfastfetch = self.packages.${prev.system}.fastfetch;
-          ndgit = self.packages.${prev.system}.git-pkg;
-          ndjq = self.packages.${prev.system}.jq-pkg;
+          ndbat = self.packages.${prev.system}.ndbat;
+          ndbtm = self.packages.${prev.system}.ndbtm;
+          ndenv = self.packages.${prev.system}.ndenv;
+          ndfastfetch = self.packages.${prev.system}.ndfastfetch;
+          ndgit = self.packages.${prev.system}.ndgit;
+          ndjq = self.packages.${prev.system}.ndjq;
           ndpandoc = self.packages.${prev.system}.ndpandoc;
-          ndstarship = self.packages.${prev.system}.starship;
-          ndzsh = self.packages.${prev.system}.zsh;
+          ndstarship = self.packages.${prev.system}.ndstarship;
+          ndzsh = self.packages.${prev.system}.ndzsh;
         } // {
           ndshell = self.packages.${prev.system}.default;
         });
