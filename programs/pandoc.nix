@@ -1,16 +1,22 @@
 { pkgs }:
 let
-  pandoc = { author }:
-    pkgs.symlinkJoin {
-      name = "pandoc-cfg";
-      paths = [ pkgs.pandoc ];
-      nativeBuildInputs = [ pkgs.makeWrapper ];
-      text = (pkgs.formats.json { }).generate "pandoc.json" {
-        metadata.author = author;
-      };
-      postBuild = ''
-        wrapProgram $out/bin/pandoc \
-          --add-flags "--defaults $text"
-      '';
+  defaultConfig = {
+    author = "NewDawn0";
+    language = "en";
+    toc = true;
+  };
+in pkgs.lib.makeOverridable ({ config ? defaultConfig }:
+  pkgs.symlinkJoin {
+    name = "pandoc";
+    paths = with pkgs; [ pandoc ];
+    nativeBuildInputs = with pkgs; [ makeWrapper ];
+    text = (pkgs.formats.json { }).generate "pandoc.json" {
+      metadata = { inherit (config) author language toc; };
     };
-in pkgs.lib.makeOverridable pandoc { author = "NewDawn0"; }
+    postBuild = ''
+      install -Dm644 $text $out/share/pandoc/pandoc.json
+      wrapProgram $out/bin/pandoc \
+        --add-flags "--defaults $out/share/pandoc/pandoc.json"
+    '';
+
+  }) { config = defaultConfig; }
