@@ -1,6 +1,6 @@
 { pkgs }:
 pkgs.symlinkJoin {
-  name = "bottom-cfg";
+  name = "ndbtm";
   paths = [ pkgs.bottom ];
   nativeBuildInputs = [ pkgs.makeWrapper ];
   text = (pkgs.formats.toml { }).generate "btm.toml" {
@@ -16,7 +16,9 @@ pkgs.symlinkJoin {
     };
   };
   postBuild = ''
-    wrapProgram $out/bin/btm \
+    mv $out/bin/btm $out/bin/ndbtm
+    wrapProgram $out/bin/ndbtm \
       --add-flags "-C $text"
+    ln -s $out/bin/ndbtm $out/bin/btm
   '';
 }

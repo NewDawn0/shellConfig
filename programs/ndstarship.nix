@@ -180,6 +180,18 @@ let
   };
   starshipCfg =
     (pkgs.formats.toml { }).generate "starship.toml" (cfg themes.b16);
-in pkgs.writeShellScriptBin "starship" ''
-  STARSHIP_CONFIG="${starshipCfg}" ${pkgs.starship}/bin/starship "$@"
-''
+in pkgs.symlinkJoin {
+  name = "ndstarship";
+  paths = [
+    (pkgs.writeShellApplication {
+      name = "ndstarship";
+      text = ''
+        export STARSHIP_CONFIG="${starshipCfg}"
+        exec ${pkgs.starship}/bin/starship "$@"
+      '';
+    })
+  ];
+  postInstall = ''
+    ln -s $out/bin/ndstarship $out/bin/starship
+  '';
+}

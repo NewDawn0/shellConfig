@@ -1,6 +1,6 @@
 { pkgs }:
 pkgs.symlinkJoin {
-  name = "extra-env";
+  name = "ndenv";
   paths = with pkgs; [
     # Default
     curl

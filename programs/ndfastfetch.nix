@@ -96,12 +96,19 @@ let
     '';
   };
   # Set theme to null if you want the default theme
-  theme = logos.ibm-large;
-  ffFinal = let
-    ffCfg = pkgs.writeText "logo.txt" (if theme == null then "" else theme);
-    text = if theme == null then
-      ''${pkgs.fastfetch}/bin/fastfetch "$@"''
-    else
-      ''${pkgs.fastfetch}/bin/fastfetch -l ${ffCfg} "$@"'';
-  in pkgs.writeShellScriptBin "fastfetch" text;
-in ffFinal
+  THEME = logos.ibm-large;
+  cfg = pkgs.writeText "logo.txt" (if THEME == null then "" else THEME);
+in pkgs.symlinkJoin {
+  name = "ndfastfetch";
+  paths = [
+    (pkgs.writeShellApplication {
+      name = "ndfastfetch";
+      text = ''
+        exec ${pkgs.fastfetch}/bin/fastfetch -l ${cfg} "$@"
+      '';
+    })
+  ];
+  postInstall = ''
+    ln -s $out/bin/ndfastfetch $out/bin/fastfetch
+  '';
+}
