@@ -130,7 +130,7 @@ let
     };
   fwriteCheck = content:
     with builtins;
-    if isString content and content != "" then
+    if isString content && content != "" then
       content
     else if isPath content && pathExists content then
       readFile content
