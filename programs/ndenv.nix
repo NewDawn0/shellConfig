@@ -20,6 +20,7 @@ pkgs.symlinkJoin {
     qemu
     ripgrep
     uutils-coreutils-noprefix
+    uutils-findutils
     wget
     # Extra
     colima
