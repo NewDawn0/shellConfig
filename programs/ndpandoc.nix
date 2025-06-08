@@ -9,7 +9,7 @@ let
   };
   pandocFinal = { config }:
     let
-      json = (pkgs.formats.json { }).generate "pandoc.json" defaultConfig;
+      json = (pkgs.formats.json { }).generate "pandoc.json" config;
       wrapper = pkgs.writeShellScriptBin "ndpandoc" ''
         exec ${pkgs.pandoc}/bin/pandoc --defaults ${json} "$@"
       '';
