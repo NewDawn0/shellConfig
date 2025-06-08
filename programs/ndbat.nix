@@ -1,17 +1,19 @@
 { pkgs }:
 let
-  wrapPkg = name: bin:
+  wrapPkg = theme: name: bin:
     pkgs.writeShellScriptBin name ''
-      BAT_THEME="TwoDark" ${bin}/bin/${name} "$@"
+      export BAT_THEME="${theme}"
+      ${bin}/bin/${name} "$@"
     '';
-in pkgs.symlinkJoin {
-  name = "ndbat";
-  paths = [
-    (wrapPkg "bat" pkgs.bat)
-    (wrapPkg "batman" pkgs.bat-extras.batman)
-    (wrapPkg "batdiff" pkgs.bat-extras.batdiff)
-  ];
-  postInstall = ''
-    ln -s $out/bin/ndbat $out/bin/bat
-  '';
-}
+  batFinal = { theme }:
+    pkgs.pkgs.symlinkJoin {
+      name = "bat-final";
+      pname = "bat";
+      paths = [
+        (wrapPkg theme "bat" pkgs.bat)
+        (wrapPkg theme "ndbat" pkgs.bat)
+        (wrapPkg theme "batman" pkgs.bat-extras.batman)
+        (wrapPkg theme "batdiff" pkgs.bat-extras.batdiff)
+      ];
+    };
+in pkgs.lib.makeOverridable batFinal { theme = "TwoDark"; }
