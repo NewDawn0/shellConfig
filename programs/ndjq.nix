@@ -1,13 +1,13 @@
 { pkgs }:
 let
   defaultTheme = {
-    null = "1;35";
-    false = "0;31";
-    true = "0;32";
-    numbers = "0;33";
-    strings = "0;32";
     arrays = "1;36";
+    false = "0;31";
+    null = "1;35";
+    numbers = "0;33";
     objects = "1;36";
+    strings = "0;32";
+    true = "0;32";
   };
   jqWrapper = theme:
     pkgs.writeShellApplication {
