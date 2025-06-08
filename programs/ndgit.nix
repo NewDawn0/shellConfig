@@ -1,14 +1,8 @@
 { pkgs }:
 let
-  ignoreFile =
-    pkgs.writeText "gitignore" (builtins.concatStringsSep "\n" default.ignore);
-  default = {
-    user = {
-      email = "newdawn.v0.0+git@gmail.com";
-      name = "NewDawn0";
-      signingkey = "8B1ED061D1C000363CF3E855064E70D1BD9280AC";
-    };
-    ignore = [
+  # Default config
+  defaultCfg = {
+    gitignore = [
       # General
       ".DS_Store"
       ".idea"
@@ -28,7 +22,12 @@ let
       "result"
       "target/"
     ];
-    config = {
+    gitconfig = {
+      user = {
+        email = "newdawn.v0.0+git@gmail.com";
+        name = "NewDawn0";
+        signingkey = "8B1ED061D1C000363CF3E855064E70D1BD9280AC";
+      };
       alias = {
         br = "branch";
         ca = "commit --amend";
@@ -42,10 +41,7 @@ let
         st = "status";
         untag = ''!sh -c 'git tag -d "$1" && git push origin -d $1' -'';
       };
-      core = {
-        pager = "${pkgs.delta}/bin/delta";
-        excludesFile = "${ignoreFile}";
-      };
+      core.pager = "${pkgs.delta}/bin/delta";
       commit.gpgsign = true;
       delta.side-by-side = true;
       init.defaultBranch = "main";
@@ -53,34 +49,57 @@ let
       pull.rebase = true;
       push.autoSetupRemote = true;
       tag.gpgSign = true;
-      user = default.user;
     };
   };
-  cfgToml = pkgs.stdenvNoCC.mkDerivation {
-    name = "git-configs";
-    src = null;
-    dontUnpack = true;
-    dontBuild = true;
-    configFile = (pkgs.formats.toml { }).generate "config.toml" default.config;
-    installPhase = ''
-      install -Dm644 $configFile $out/share/git/config.toml
-    '';
-  };
-in pkgs.symlinkJoin {
-  name = "ndgit";
-  paths = with pkgs;
-    [
-      cfgToml
-      (writeShellApplication {
-        name = "ndgit";
-        text = ''
-          export GIT_CONFIG_GLOBAL="${cfgToml}/share/git/config.toml"
-          ${git}/bin/git "$@"
-        '';
-      })
-    ] ++ lib.optional stdenv.isDarwin [ pinentry_mac ]
-    ++ lib.optional stdenv.isLinux [ pinentry-qt ];
-  postInstall = ''
-    ln -s $out/bin/ndgit $out/bin/git
-  '';
-}
+  gitCfg = { cfg }:
+    let
+      gitignore = pkgs.writeText "gitignore"
+        (builtins.concatStringsSep "\n" cfg.gitignore);
+      gitconfig = (pkgs.formats.toml { }).generate "config.toml" (cfg.gitconfig
+        // {
+          core.excludesFile = pkgs.writeText "gitignore"
+            (builtins.concatStringsSep "\n" defaultCfg.gitignore);
+        });
+    in pkgs.stdenvNoCC.mkDerivation {
+      name = "git-config";
+      src = null;
+      dontUnpack = true;
+      dontConfigure = true;
+      dontBuild = true;
+      installPhase = ''
+        install -Dm644 ${gitignore} $out/share/ndgit/gitignore
+        install -Dm644 ${gitconfig} $out/share/ndgit/config.toml
+      '';
+    };
+  gitPkg = { cfg }:
+    pkgs.writeShellApplication {
+      name = "ndgit";
+      runtimeInputs = with pkgs;
+        [ pkgs.gnupg ] ++ lib.optionals stdenv.isDarwin [ pinentry_mac ]
+        ++ lib.optionals stdenv.isLinux [ pinentry-qt ];
+      text = ''
+        export GIT_CONFIG_GLOBAL="${
+          gitCfg { inherit cfg; }
+        }/share/ndgit/config.toml"
+        ${pkgs.git}/bin/git "$@"
+      '';
+    };
+  gitFinal = { cfg }:
+    assert builtins.isAttrs cfg;
+    let
+      g = gitPkg { inherit cfg; };
+      c = gitCfg { inherit cfg; };
+    in pkgs.stdenvNoCC.mkDerivation {
+      name = "git-final";
+      pname = "git";
+      src = null;
+      dontUnpack = true;
+      dontBuild = true;
+      installPhase = ''
+        install -Dm755 ${g}/bin/ndgit               $out/bin/ndgit
+        install -Dm644 ${c}/share/ndgit/gitignore   $out/share/ndgit/gitignore
+        install -Dm644 ${c}/share/ndgit/config.toml $out/share/ndgit/config.toml
+        ln      -s     $out/bin/ndgit               $out/bin/git
+      '';
+    };
+in pkgs.lib.makeOverridable gitFinal { cfg = defaultCfg; }
