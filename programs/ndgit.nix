@@ -51,12 +51,12 @@ let
       tag.gpgSign = true;
     };
   };
-  gitCfg = { cfg }:
+  gitCfg = { config }:
     let
       gitignore = pkgs.writeText "gitignore"
-        (builtins.concatStringsSep "\n" cfg.gitignore);
-      gitconfig = (pkgs.formats.toml { }).generate "config.toml" (cfg.gitconfig
-        // {
+        (builtins.concatStringsSep "\n" config.gitignore);
+      gitconfig = (pkgs.formats.toml { }).generate "config.toml"
+        (config.gitconfig // {
           core.excludesFile = pkgs.writeText "gitignore"
             (builtins.concatStringsSep "\n" defaultCfg.gitignore);
         });
@@ -71,7 +71,7 @@ let
         install -Dm644 ${gitconfig} $out/share/ndgit/config.toml
       '';
     };
-  gitPkg = { cfg }:
+  gitPkg = { config }:
     pkgs.writeShellApplication {
       name = "ndgit";
       runtimeInputs = with pkgs;
@@ -79,16 +79,16 @@ let
         ++ lib.optionals stdenv.isLinux [ pinentry-qt ];
       text = ''
         export GIT_CONFIG_GLOBAL="${
-          gitCfg { inherit cfg; }
+          gitCfg { inherit config; }
         }/share/ndgit/config.toml"
         ${pkgs.git}/bin/git "$@"
       '';
     };
-  gitFinal = { cfg }:
-    assert builtins.isAttrs cfg;
+  gitFinal = { config }:
+    assert builtins.isAttrs config;
     let
-      g = gitPkg { inherit cfg; };
-      c = gitCfg { inherit cfg; };
+      g = gitPkg { inherit config; };
+      c = gitCfg { inherit config; };
     in pkgs.stdenvNoCC.mkDerivation {
       name = "git-final";
       pname = "git";
@@ -102,4 +102,4 @@ let
         ln      -s     $out/bin/ndgit               $out/bin/git
       '';
     };
-in pkgs.lib.makeOverridable gitFinal { cfg = defaultCfg; }
+in pkgs.lib.makeOverridable gitFinal { config = defaultCfg; }
