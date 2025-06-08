@@ -38,151 +38,149 @@ let
       red = "#FF7078";
     };
   };
-  defaultConfig = { theme }:
-    let c = theme;
-    in {
-      "$schema" = "https://starship.rs/config-schema.json";
-      format = ''
-        [](${c.p0})$os$username[](bg:${c.p1} fg:${c.p0})$directory[](fg:${c.p1} bg:${c.p2})$git_branch$git_status[](fg:${c.p2} bg:${c.p3})$nix_shell$docker_context$conda[](fg:${c.p3} bg:${c.p4})$c$rust$golang$nodejs$php$java$kotlin$haskell$python[](fg:${c.p4} bg:${c.p5})$time[ ](fg:${c.p5})
-        $line_break$character
-      '';
-      # General
-      line_break.disabled = true;
-      character = {
-        disabled = false;
-        success_symbol = "[❯](bold fg:${c.green})";
-        error_symbol = "[❯](bold fg:${c.red})";
-        vimcmd_symbol = "[](bold fg:${c.green})";
-        vimcmd_replace_one_symbol = "[](bold fg:${c.p0})";
-        vimcmd_replace_symbol = "[](bold fg:${c.p0})";
-        vimcmd_visual_symbol = "[](bold fg:${c.p3})";
-      };
+  mkConfig = c: {
+    "$schema" = "https://starship.rs/config-schema.json";
+    format = ''
+      [](${c.p0})$os$username[](bg:${c.p1} fg:${c.p0})$directory[](fg:${c.p1} bg:${c.p2})$git_branch$git_status[](fg:${c.p2} bg:${c.p3})$nix_shell$docker_context$conda[](fg:${c.p3} bg:${c.p4})$c$rust$golang$nodejs$php$java$kotlin$haskell$python[](fg:${c.p4} bg:${c.p5})$time[ ](fg:${c.p5})
+      $line_break$character
+    '';
+    # General
+    line_break.disabled = true;
+    character = {
+      disabled = false;
+      success_symbol = "[❯](bold fg:${c.green})";
+      error_symbol = "[❯](bold fg:${c.red})";
+      vimcmd_symbol = "[](bold fg:${c.green})";
+      vimcmd_replace_one_symbol = "[](bold fg:${c.p0})";
+      vimcmd_replace_symbol = "[](bold fg:${c.p0})";
+      vimcmd_visual_symbol = "[](bold fg:${c.p3})";
+    };
 
-      # Symbols
-      os = {
-        disabled = false;
-        style = "bg:${c.p0} fg:${c.fg0}";
-        symbols = {
-          Alpine = "";
-          Amazon = "";
-          Android = "";
-          Arch = "󰣇";
-          Artix = "󰣇";
-          CentOS = "";
-          Debian = "󰣚";
-          Fedora = "󰣛";
-          Gentoo = "󰣨";
-          Linux = "󰌽";
-          Macos = "󰀵";
-          Manjaro = "";
-          Mint = "󰣭";
-          Raspbian = "󰐿";
-          RedHatEnterprise = "󱄛";
-          Redhat = "󱄛";
-          SUSE = "";
-          Ubuntu = "󰕈";
-          Windows = "󰍲";
-        };
-      };
-      time = {
-        disabled = false;
-        time_format = "%R";
-        style = "bg:${c.p5}";
-        format = "[[  $time ](fg:${c.fg0} bg:${c.p5})]($style)";
-      };
-      username = {
-        show_always = true;
-        style_user = "bg:${c.p0} fg:${c.fg0}";
-        style_root = "bg:${c.p0} fg:${c.fg0}";
-        format = "[ $user ]($style)";
-      };
-      directory = {
-        style = "fg:${c.fg0} bg:${c.p1}";
-        format = "[ $path ]($style)";
-        truncation_length = 3;
-        truncation_symbol = "…/";
-        substitutions = {
-          "Documents" = "󰈙 ";
-          "Downloads" = " ";
-          "Music" = "󰝚 ";
-          "Pictures" = " ";
-          "Developer" = "󰲋 ";
-        };
-      };
-      git_branch = {
-        symbol = "";
-        style = "bg:${c.p2}";
-        format = "[[ $symbol $branch ](fg:${c.fg0} bg:${c.p2})]($style)";
-      };
-      git_status = {
-        style = "bg:${c.p2}";
-        format =
-          "[[($all_status$ahead_behind )](fg:${c.fg0} bg:${c.p2})]($style)";
-      };
-      nix_shell = {
-        symbol = "󱄅";
-        style = "bg:${c.p3}";
-        format = "[[ $symbol( $name) ](fg:${c.fg0} bg:${c.p3})]($style)";
-        heuristic = true;
-      };
-      docker_context = {
-        symbol = "";
-        style = "bg:${c.p3}";
-        format = "[[ $symbol( $context) ](fg:${c.fg0} bg:${c.p3})]($style)";
-      };
-      conda = {
-        style = "bg:${c.p3}";
-        format = "[[ $symbol( $environment) ](fg:${c.fg0} bg:${c.p3})]($style)";
-      };
-      nodejs = {
-        symbol = "";
-        style = "bg:${c.p4}";
-        format = "[[ $symbol( $version) ](fg:${c.fg0} bg:${c.p4})]($style)";
-      };
-      c = {
-        symbol = " ";
-        style = "bg:${c.p4}";
-        format = "[[ $symbol( $version) ](fg:${c.fg0} bg:${c.p4})]($style)";
-      };
-      rust = {
-        symbol = "";
-        style = "bg:${c.p4}";
-        format = "[[ $symbol( $version) ](fg:${c.fg0} bg:${c.p4})]($style)";
-      };
-      golang = {
-        symbol = "";
-        style = "bg:${c.p4}";
-        format = "[[ $symbol( $version) ](fg:${c.fg0} bg:${c.p4})]($style)";
-      };
-      php = {
-        symbol = "";
-        style = "bg:${c.p4}";
-        format = "[[ $symbol( $version) ](fg:${c.fg0} bg:${c.p4})]($style)";
-      };
-      java = {
-        symbol = "";
-        style = "bg:${c.p4}";
-        format = "[[ $symbol( $version) ](fg:${c.fg0} bg:${c.p4})]($style)";
-      };
-      kotlin = {
-        symbol = "";
-        style = "bg:${c.p4}";
-        format = "[[ $symbol( $version) ](fg:${c.fg0} bg:${c.p4})]($style)";
-      };
-      haskell = {
-        symbol = "";
-        style = "bg:${c.p4}";
-        format = "[[ $symbol( $version) ](fg:${c.fg0} bg:${c.p4})]($style)";
-      };
-      python = {
-        symbol = "";
-        style = "bg:${c.p4}";
-        format = "[[ $symbol( $version) ](fg:${c.fg0} bg:${c.p4})]($style)";
+    # Symbols
+    os = {
+      disabled = false;
+      style = "bg:${c.p0} fg:${c.fg0}";
+      symbols = {
+        Alpine = "";
+        Amazon = "";
+        Android = "";
+        Arch = "󰣇";
+        Artix = "󰣇";
+        CentOS = "";
+        Debian = "󰣚";
+        Fedora = "󰣛";
+        Gentoo = "󰣨";
+        Linux = "󰌽";
+        Macos = "󰀵";
+        Manjaro = "";
+        Mint = "󰣭";
+        Raspbian = "󰐿";
+        RedHatEnterprise = "󱄛";
+        Redhat = "󱄛";
+        SUSE = "";
+        Ubuntu = "󰕈";
+        Windows = "󰍲";
       };
     };
-  starshipFinal = { config }:
+    time = {
+      disabled = false;
+      time_format = "%R";
+      style = "bg:${c.p5}";
+      format = "[[  $time ](fg:${c.fg0} bg:${c.p5})]($style)";
+    };
+    username = {
+      show_always = true;
+      style_user = "bg:${c.p0} fg:${c.fg0}";
+      style_root = "bg:${c.p0} fg:${c.fg0}";
+      format = "[ $user ]($style)";
+    };
+    directory = {
+      style = "fg:${c.fg0} bg:${c.p1}";
+      format = "[ $path ]($style)";
+      truncation_length = 3;
+      truncation_symbol = "…/";
+      substitutions = {
+        "Documents" = "󰈙 ";
+        "Downloads" = " ";
+        "Music" = "󰝚 ";
+        "Pictures" = " ";
+        "Developer" = "󰲋 ";
+      };
+    };
+    git_branch = {
+      symbol = "";
+      style = "bg:${c.p2}";
+      format = "[[ $symbol $branch ](fg:${c.fg0} bg:${c.p2})]($style)";
+    };
+    git_status = {
+      style = "bg:${c.p2}";
+      format =
+        "[[($all_status$ahead_behind )](fg:${c.fg0} bg:${c.p2})]($style)";
+    };
+    nix_shell = {
+      symbol = "󱄅";
+      style = "bg:${c.p3}";
+      format = "[[ $symbol( $name) ](fg:${c.fg0} bg:${c.p3})]($style)";
+      heuristic = true;
+    };
+    docker_context = {
+      symbol = "";
+      style = "bg:${c.p3}";
+      format = "[[ $symbol( $context) ](fg:${c.fg0} bg:${c.p3})]($style)";
+    };
+    conda = {
+      style = "bg:${c.p3}";
+      format = "[[ $symbol( $environment) ](fg:${c.fg0} bg:${c.p3})]($style)";
+    };
+    nodejs = {
+      symbol = "";
+      style = "bg:${c.p4}";
+      format = "[[ $symbol( $version) ](fg:${c.fg0} bg:${c.p4})]($style)";
+    };
+    c = {
+      symbol = " ";
+      style = "bg:${c.p4}";
+      format = "[[ $symbol( $version) ](fg:${c.fg0} bg:${c.p4})]($style)";
+    };
+    rust = {
+      symbol = "";
+      style = "bg:${c.p4}";
+      format = "[[ $symbol( $version) ](fg:${c.fg0} bg:${c.p4})]($style)";
+    };
+    golang = {
+      symbol = "";
+      style = "bg:${c.p4}";
+      format = "[[ $symbol( $version) ](fg:${c.fg0} bg:${c.p4})]($style)";
+    };
+    php = {
+      symbol = "";
+      style = "bg:${c.p4}";
+      format = "[[ $symbol( $version) ](fg:${c.fg0} bg:${c.p4})]($style)";
+    };
+    java = {
+      symbol = "";
+      style = "bg:${c.p4}";
+      format = "[[ $symbol( $version) ](fg:${c.fg0} bg:${c.p4})]($style)";
+    };
+    kotlin = {
+      symbol = "";
+      style = "bg:${c.p4}";
+      format = "[[ $symbol( $version) ](fg:${c.fg0} bg:${c.p4})]($style)";
+    };
+    haskell = {
+      symbol = "";
+      style = "bg:${c.p4}";
+      format = "[[ $symbol( $version) ](fg:${c.fg0} bg:${c.p4})]($style)";
+    };
+    python = {
+      symbol = "";
+      style = "bg:${c.p4}";
+      format = "[[ $symbol( $version) ](fg:${c.fg0} bg:${c.p4})]($style)";
+    };
+  };
+  starshipFinal = { theme }:
     let
-      toml = (pkgs.formats.toml { }).generate "starship.toml" config;
+      toml = (pkgs.formats.toml { }).generate "starship.toml" (mkConfig theme);
       bin = pkgs.writeShellScriptBin "ndstarship" ''
         export STARSHIP_CONFIG="${toml}"
         exec ${pkgs.starship}/bin/starship "$@"
@@ -199,6 +197,4 @@ let
         ln      -s     $out/bin/ndstarship   $out/bin/starship
       '';
     };
-in pkgs.lib.makeOverridable starshipFinal {
-  config = (defaultConfig { theme = themes.b16; });
-}
+in pkgs.lib.makeOverridable starshipFinal { theme = themes.b16; }
