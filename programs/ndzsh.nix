@@ -75,6 +75,18 @@ let
       "HIST_IGNORE_SPACE"
       "HIST_SAVE_NO_DUPS"
     ];
+    extraPackages = [
+      pkgs.cargo
+      pkgs.delta
+      pkgs.dir-stack
+      pkgs.direnv
+      pkgs.eza
+      pkgs.fzf
+      pkgs.jq
+      pkgs.pac-asm
+      pkgs.up
+      pkgs.zoxide
+    ];
   };
   # Custom wrapped programs (as: 'a' for apps)
   apps = {
@@ -159,23 +171,12 @@ let
       name = "ndzsh";
       paths = [
         (zshDots { config = cfg; })
-        # Packages
-        pkgs.cargo
-        pkgs.delta
-        pkgs.dir-stack
-        pkgs.direnv
-        pkgs.eza
-        pkgs.fzf
-        pkgs.jq
-        pkgs.pac-asm
-        pkgs.up
-        pkgs.zoxide
         # Customised programs
         apps.bat
         apps.btm
         apps.fastfetch
         apps.git
         apps.starship
-      ];
+      ] ++ config.extraPackages;
     };
 in pkgs.lib.makeOverridable zshFinal { config = defaultConfig; }
