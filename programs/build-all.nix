@@ -1,7 +1,5 @@
 { pkgs }:
-let
-  buildOverlays = { flakePath }: with builtins; attrNames (getFlake flakePath);
-in pkgs.writeShellApplication {
+pkgs.writeShellApplication {
   name = "build-all";
   runtimeInputs = with pkgs; [ jq ];
   text = ''
@@ -45,34 +43,9 @@ in pkgs.writeShellApplication {
           fi
         }
 
-        overlaysOpt() {
-          local allOverlays
-          local path
-          if [[ $# -eq 0 ]]; then
-            echo "No flake path provided"
-            echo "-> Using path: '.'"
-            path="$(pwd)"
-          else
-            path="$(readpath "$1")"
-          fi
-          echo "Getting overlays..."
-          allOverlays=$(nix eval --impure --expr "with builtins; concatStringsSep \"\n\" (attrNames (getFlake \"$(pwd)\").overlays)")
-          echo "Building overlays..."
-          for overlay in $allOverlays; do
-            echo "-> Building overlay: $overlay"
-            local pkgs
-            pkgs="$(nix eval --impure --expr "with builtins; concatStringsSep \"\n\" (attrNames (getFlake \"$(pwd)\").overlays.$overlay)")"
-            for pkg in $pkgs; do
-              echo "--> Building package: $pkg"
-              # nix build ".#$pkg" || (echo "Failed to build $pkg" && exit 1)
-            done
-          done
-        }
-
         allOpt() {
           echo "Building all attributes..."
           packagesOpt "$@"
-          overlaysOpt "$@"
         }
 
         main() {
@@ -93,9 +66,6 @@ in pkgs.writeShellApplication {
             "p"|"packages")
               shift
               packagesOpt "$@" ;;
-            "o"|"overlays")
-              shift
-              overlaysOpt "$@" ;;
             "h"|"help"|"-h"|"--help")
               helpOpt
               exit 0 ;;
