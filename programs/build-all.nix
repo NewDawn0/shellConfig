@@ -53,7 +53,7 @@ pkgs.writeShellApplication {
             0)
               echo "No arguments provided"
               echo  "-> Using 'all' argument"
-              allOpt
+              allOpt ;;
             1)
               case "$1" in
                 "a"|"all")
