@@ -49,26 +49,24 @@ pkgs.writeShellApplication {
         }
 
         main() {
-          if [[ $# -eq 0 ]]; then
-            echo "No arguments provided"
-            echo  "-> Using 'all' argument"
-            allOpt
-          fi
-          if [[ $# -gt 2 ]]; then
-            echo -e "Too many arguments provided\n"
-            helpOpt
-            exit 1
-          fi
-          case "$1" in
-            "a"|"all")
-              shift
-              allOpt "$@" ;;
-            "p"|"packages")
-              shift
-              packagesOpt "$@" ;;
-            "h"|"help"|"-h"|"--help")
-              helpOpt
-              exit 0 ;;
+          case "$#" in
+            0)
+              echo "No arguments provided"
+              echo  "-> Using 'all' argument"
+              allOpt
+            1)
+              case "$1" in
+                "a"|"all")
+                  shift
+                  allOpt "$@" ;;
+                "p"|"packages")
+                  shift
+                  packagesOpt "$@" ;;
+                "h"|"help"|"-h"|"--help")
+                  helpOpt
+                  exit 0 ;;
+                *)
+              esac
             *)
               echo -e "Invalid argument: '$1'\n"
               helpOpt
