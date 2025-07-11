@@ -6,6 +6,7 @@ let
       # General
       cat = "bat";
       cd = "z";
+      cdt = "cd $(mktemp -d)";
       cp = "cp -i";
       diff = "delta";
       git = "${apps.git}/bin/git";
@@ -16,9 +17,11 @@ let
       lt = "eza --git --icons=always --tree";
       lta = "eza --git --icons=always --tree -a";
       mv = "mv -i";
+      tr = "trash";
       regit = "mv tmp/.git . && rmdir tmp";
       ungit = "mkdir -p tmp && mv .git tmp/";
       # Nix
+      nix-ba = "build-all";
       nix-cl = ''
         fd -t l -H "^result$" ~/GitHub | xargs -I{} rm {} && fd -t d -H ^target ~/GitHub | xargs -I{} "cd {} && cargo clean"'';
       nix-fu = "nix flake update";
