@@ -66,7 +66,7 @@ pkgs.writeShellApplication {
                   helpOpt
                   exit 0 ;;
                 *)
-              esac
+              esac ;;
             *)
               echo -e "Invalid argument: '$1'\n"
               helpOpt
